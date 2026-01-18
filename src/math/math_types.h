@@ -56,3 +56,12 @@ typedef vec4 quaternion;
 typedef struct triangle_t {
     vec3 verts[3];
 } triangle;
+
+typedef union mat4_union {
+    f32 data[16];
+} mat4;
+
+typedef union mat3_union {
+    f32 data[9];
+} mat3;
+

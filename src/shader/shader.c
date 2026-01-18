@@ -66,3 +66,8 @@ void shader_check_compile_error(u32 shaderID, const char* type) {
         }
     }
 }
+
+
+void shader_set_mat4(u32 shaderID, const char* name, const mat4 mat) {
+    glUniformMatrix4fv(glGetUniformLocation(shaderID, name), 1, GL_FALSE, mat.data);
+}

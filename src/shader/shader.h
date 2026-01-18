@@ -5,6 +5,7 @@
 #include <GL/glext.h>
 #include "../common/defines.h"
 #include "../common/files.h"
+#include "../math/math_types.h"
 
 #define MAXSHADERBUFLEN 1000000
 
@@ -32,4 +33,4 @@ void shader_check_compile_error(u32 shaderID, const char* type);
 //// ------------------------------------------------------------------------
 //void setMat3(const std::string &name, const glm::mat3 &mat) const;
 //// ------------------------------------------------------------------------
-//void setMat4(const std::string &name, const glm::mat4 &mat) const;
+void shader_set_mat4(u32 shaderID, const char* name, const mat4 mat);
