@@ -5,129 +5,353 @@
 #include <string.h>
 #include <stdlib.h>
 
-// Create and returns a 2-length vector given the 2 values
+
+// =============================================================
+// Vector2 functions
+// =============================================================
+
+/*
+* @brief Creates a new vec2 with the given x and y values.
+*
+* @param x The x (or r) component of the vector.
+* @param y The y (or g) component of the vector.
+* @return A vec2 struct initialized with the provided x and y values.
+*/
 static inline vec2 vec2_new(f32 x, f32 y){ return (vec2){x, y}; }
-// Create and returns a 2-length vector with all values set to 0
+
+/*
+* @brief Creates and returns a 2-length vector with all values set to 0.
+*
+* @param void
+* @return A vec2 struct initialized with all values set to 0.
+*/
 static inline vec2 vec2_zero(void){ return (vec2){0.0f, 0.0f}; }
-// Create and returns a 2-length vector with all values set to 1
+
+/*
+* @brief Creates and returns a 2-length vector with all values set to 1.
+*
+* @param void
+* @return A vec2 struct initialized with all values set to 1.
+*/
 static inline vec2 vec2_one(void){ return (vec2){1.0f, 1.0f}; }
-// Create and returns a 2-length vector pointing up (0, 1)
+
+/*
+* @brief Creates and returns a 2-length vector pointing up 
+* 
+* @param void
+* @return A vec2 struct initialized with the values (0, 1)
+*/
 static inline vec2 vec2_up(void){ return (vec2){0.0f, 1.0f}; }
-// Create and returns a 2-length vector pointing down (0, -1)
+
+/*
+* @brief Creates and returns a 2-length vector pointing down 
+* 
+* @param void
+* @return A vec2 struct initialized with the values (0, -1)
+*/
 static inline vec2 vec2_down(void){ return (vec2){0.0f, -1.0f}; }
-// Create and returns a 2-length vector pointing left (-1, 0)
+
+/*
+* @brief Creates and returns a 2-length vector pointing left 
+* 
+* @param void
+* @return A vec2 struct initialized with the values (-1, 0)
+*/
 static inline vec2 vec2_left(void){ return (vec2){-1.0f, 0.0f}; }
-// Create and returns a 2-length vector with all right (1, 0)
+
+/*
+* @brief Creates and returns a 2-length vector pointing right 
+* 
+* @param void
+* @return A vec2 struct initialized with the values (1, 0).
+*/
 static inline vec2 vec2_right(void){ return (vec2){1.0f, 0.0f}; }
 
-// Sum 2 vec2 and returns a copy of the result
+/*
+* @brief Sums two vec2 and returns a copy of the result.
+* 
+* @param v1 The first vector.
+* @param v2 The second vector.
+* @return A vec2 struct containing the sum of v1 and v2.
+*/
 static inline vec2 vec2_sum(vec2 v1, vec2 v2) {
     return (vec2){v1.x + v2.x, v1.y + v2.y};
 }
-// Subtract 2 v2 from v1 and returns a copy of the result
+
+/*
+* @brief Subtracts two vec2 and returns a copy of the result.
+* 
+* @param v1 The first vector.
+* @param v2 The second vector.
+* @return A vec2 struct containing v1 - v2.
+*/
 static inline vec2 vec2_sub(vec2 v1, vec2 v2) {
     return (vec2){v1.x - v2.x, v1.y - v2.y};
 }
 
-// Multiply 2 vec2 and returns a copy of the result
+/*
+* @brief Multiplies two vec2 and returns a copy of the result.
+* 
+* @param v1 The first vector.
+* @param v2 The second vector.
+* @return A vec2 struct containing the element-wise product of v1 and v2.
+*/
 static inline vec2 vec2_mul(vec2 v1, vec2 v2) {
     return (vec2){v1.x * v2.x, v1.y * v2.y};
 }
 
-// Multiply all elements of v by the given scalar and returns a copy of the result
+/*
+* @brief Multiplies all elements of a vec2 by the given scalar and returns a copy of the result.
+* 
+* @param v The vector.
+* @param t The scalar value.
+* @return A vec2 struct containing v multiplied by t.
+*/
 static inline vec2 vec2_mul_scalar(vec2 v, f32 t) {
     return (vec2){t * v.x, t * v.y};
 }
-// Divide v1 by v2 and returns a copy of the result
+
+/*
+* @brief Divides two vec2 and returns a copy of the result.
+* 
+* @param v1 The first vector (dividend).
+* @param v2 The second vector (divisor).
+* @return A vec2 struct containing v1 / v2.
+*/
 static inline vec2 vec2_div(vec2 v1, vec2 v2) {
     assert(v2.x != 0 && v2.y != 0);
     return (vec2){v1.x / v2.x, v1.y / v2.y};  //Praying i won't divide by 0 lol, putting an assert just to be sure, will think about it
 }
-// returns the squared length of v
+
+/*
+* @brief Returns the squared length of a vec2.
+* 
+* @param v The vector.
+* @return The squared length of v.
+*/
 static inline f32 vec2_length_squared(vec2 v) {
     return v.x * v.x + v.y * v.y;
 }
-// returns the length of v
+
+/*
+* @brief Returns the length of a vec2.
+* 
+* @param v The vector.
+* @return The length of v.
+*/
 static inline f32 vec2_length(vec2 v) {
     return sqrt(vec2_length_squared(v));
 }
-// Normalize in place the provided vec2 v
+
+/*
+* @brief Normalizes in place the provided vec2.
+* 
+* @param v Pointer to the vector to normalize.
+* @return void
+*/
 static inline void vec2_normalize(vec2* v) {
     f32 length = vec2_length(*v);
     v->x /= length;
     v->y /= length;
 }
-// returns a normalized copy of the provided vec2
+
+/*
+* @brief Returns a normalized copy of the provided vec2.
+* 
+* @param v The vector to normalize.
+* @return A normalized copy of v.
+*/
 static inline vec2 vec2_normalized(vec2 v) { //structs are passed by copy by default so this works without changing the original struct :D
     vec2_normalize(&v);
     return v;
 }
 
 
-// Create and returns a 3-length vector given the 2 values
+// =============================================================
+// Vector3 functions
+// =============================================================
+
+/*
+* @brief Creates and returns a 3-length vector given the 3 values.
+* 
+* @param x The x component of the vector.
+* @param y The y component of the vector.
+* @param z The z component of the vector.
+* @return A vec3 struct initialized with the provided x, y, and z values.
+*/
 static inline vec3 vec3_new(f32 x, f32 y, f32 z){ return (vec3){x, y, z}; }
-// Create and returns a 3-length vector with all values set to 0
+
+/*
+* @brief Creates and returns a 3-length vector with all values set to 0.
+*
+* @param void
+* @return A vec3 struct initialized with all values set to 0.
+*/
 static inline vec3 vec3_zero(void){ return (vec3){0.0f, 0.0f, 0.0f}; }
-// Create and returns a 3-length vector with all values set to 1
+
+/*
+* @brief Creates and returns a 3-length vector with all values set to 1.
+*
+* @param void
+* @return A vec3 struct initialized with all values set to 1.
+*/
 static inline vec3 vec3_one(void){ return (vec3){1.0f, 1.0f, 1.0f}; }
-// Create and returns a 3-length vector pointing up (0, 1, 0)
+
+/*
+* @brief Creates and returns a 3-length vector pointing up.
+*
+* @param void
+* @return A vec3 struct initialized with the values (0, 1, 0).
+*/
 static inline vec3 vec3_up(void){ return (vec3){0.0f, 1.0f, 0.0f}; }
-// Create and returns a 3-length vector pointing down (0, -1, 0)
+
+/*
+* @brief Creates and returns a 3-length vector pointing down.
+*
+* @param void
+* @return A vec3 struct initialized with the values (0, -1, 0).
+*/
 static inline vec3 vec3_down(void){ return (vec3){0.0f, -1.0f, 0.0f}; }
-// Create and returns a 3-length vector pointing left (-1, 0, 0)
+
+/*
+* @brief Creates and returns a 3-length vector pointing left.
+*
+* @param void
+* @return A vec3 struct initialized with the values (-1, 0, 0).
+*/
 static inline vec3 vec3_left(void){ return (vec3){-1.0f, 0.0f, 0.0f}; }
-// Create and returns a 3-length vector pointing right (1, 0, 0)
+
+/*
+* @brief Creates and returns a 3-length vector pointing right.
+*
+* @param void
+* @return A vec3 struct initialized with the values (1, 0, 0).
+*/
 static inline vec3 vec3_right(void){ return (vec3){1.0f, 0.0f, 0.0f}; }
-// Create and returns a 3-length vector pointing forward(0, 0, 1)
+
+/*
+* @brief Creates and returns a 3-length vector pointing forward.
+*
+* @param void
+* @return A vec3 struct initialized with the values (0, 0, 1).
+*/
 static inline vec3 vec3_forward(void){ return (vec3){0.0f, 0.0f, 1.0f}; }
-// Create and returns a 3-length vector pointing backward(0, 0, 1)
+
+/*
+* @brief Creates and returns a 3-length vector pointing backward.
+*
+* @param void
+* @return A vec3 struct initialized with the values (0, 0, -1).
+*/
 static inline vec3 vec3_backward(void){ return (vec3){0.0f, 0.0f, -1.0f}; }
 
-// Sum 3 vec3 and returns a copy of the result
+/*
+* @brief Sums two vec3 and returns a copy of the result.
+*
+* @param v1 The first vector.
+* @param v2 The second vector.
+* @return A vec3 struct containing the sum of v1 and v2.
+*/
 static inline vec3 vec3_sum(vec3 v1, vec3 v2) {
     return (vec3){v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
 }
-// Subtract 3 v2 from v1 and returns a copy of the result
+
+/*
+* @brief Subtracts two vec3 and returns a copy of the result.
+*
+* @param v1 The first vector.
+* @param v2 The second vector.
+* @return A vec3 struct containing v1 - v2.
+*/
 static inline vec3 vec3_sub(vec3 v1, vec3 v2) {
     return (vec3){v1.x - v2.x, v1.y - v2.y, v1.z - v2.z};
 }
 
-// Multiply 3 vec3 and returns a copy of the result
+/*
+* @brief Multiplies two vec3 and returns a copy of the result.
+*
+* @param v1 The first vector.
+* @param v2 The second vector.
+* @return A vec3 struct containing the element-wise product of v1 and v2.
+*/
 static inline vec3 vec3_mul(vec3 v1, vec3 v2) {
     return (vec3){v1.x * v2.x, v1.y * v2.y, v1.z * v2.z};
 }
 
-// Multiply all elements of v by the given scalar and returns a copy of the result
+/*
+* @brief Multiplies all elements of a vec3 by the given scalar and returns a copy of the result.
+*
+* @param v The vector.
+* @param t The scalar value.
+* @return A vec3 struct containing v multiplied by t.
+*/
 static inline vec3 vec3_mul_scalar(vec3 v, f32 t) {
     return (vec3){t * v.x, t * v.y, t * v.z};
 }
-// Divide v1 by v2 and returns a copy of the result
+
+/*
+* @brief Divides two vec3 and returns a copy of the result.
+*
+* @param v1 The first vector (dividend).
+* @param v2 The second vector (divisor).
+* @return A vec3 struct containing v1 / v2.
+*/
 static inline vec3 vec3_div(vec3 v1, vec3 v2) {
     assert(v2.x != 0 && v2.y != 0);
     return (vec3){v1.x / v2.x, v1.y / v2.y, v1.z / v2.z};  //Praying i won't divide by 0 lol, putting an assert just to be sure, will think about it
 }
-// returns the squared length of v
+
+/*
+* @brief Returns the squared length of a vec3.
+*
+* @param v The vector.
+* @return The squared length of v.
+*/
 static inline f32 vec3_length_squared(vec3 v) {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
-// returns the length of v
+
+/*
+* @brief Returns the length of a vec3.
+*
+* @param v The vector.
+* @return The length of v.
+*/
 static inline f32 vec3_length(vec3 v) {
     return sqrt(vec3_length_squared(v));
 }
-// Normalize in place the provided vec3 v
+
+/*
+* @brief Normalizes in place the provided vec3.
+*
+* @param v Pointer to the vector to normalize.
+* @return void
+*/
 static inline void vec3_normalize(vec3* v) {
     f32 length = vec3_length(*v);
     v->x /= length;
     v->y /= length;
     v->z /= length;
 }
-// returns a normalized copy of the provided vec3
+
+/*
+* @brief Returns a normalized copy of the provided vec3.
+*
+* @param v The vector to normalize.
+* @return A normalized copy of v.
+*/
 static inline vec3 vec3_normalized(vec3 v) { //structs are passed by copy by default so this works without changing the original struct :D
     vec3_normalize(&v);
     return v;
 }
 
-// returns the dot product of the two vectors provided
+/*
+* @brief Returns the dot product of the two vectors provided.
+* 
+* @param v1 The first vector.
+* @param v2 The second vector.
+* @return The dot product of v1 and v2.
+*/
 static inline f32 vec3_dot_prod(vec3 v1, vec3 v2) {
     f32 res = v1.x * v2.x;
     res += v1.y * v2.y;
@@ -135,7 +359,13 @@ static inline f32 vec3_dot_prod(vec3 v1, vec3 v2) {
     return res;
 }
 
-// calculate the cross product of the 2 vectors provided and returns a copy of the result
+/*
+* @brief Calculates the cross product of the two vectors provided and returns a copy of the result.
+* 
+* @param v1 The first vector.
+* @param v2 The second vector.
+* @return A vec3 struct containing the cross product of v1 and v2.
+*/
 static inline vec3 vec3_cross_prod(vec3 v1, vec3 v2) {
     return (vec3){
         v1.y * v2.z - v1.z * v2.y,
@@ -144,7 +374,17 @@ static inline vec3 vec3_cross_prod(vec3 v1, vec3 v2) {
     };
 }
 
-// create and returns an identity matrix
+
+// =============================================================
+// Matrix4 functions
+// =============================================================
+
+/*
+* @brief Creates and returns an identity matrix.
+* 
+* @param void
+* @return A mat4 struct initialized as an identity matrix.
+*/
 static inline mat4 mat4_identity(void) {
     mat4 res;
     memset(res.data, 0, sizeof(f32) * 16); // initialize all values to 0;
@@ -155,7 +395,13 @@ static inline mat4 mat4_identity(void) {
     return res;
 }
 
-// multiply 2 mat4 and returns the resulting matrix
+/*
+* @brief Multiplies two mat4 and returns the resulting matrix.
+* 
+* @param m1 The first matrix.
+* @param m2 The second matrix.
+* @return A mat4 struct containing the product of m1 and m2.
+*/
 static inline mat4 mat4_mul(mat4 m1, mat4 m2) {
     mat4 res = mat4_identity();
 
@@ -174,7 +420,14 @@ static inline mat4 mat4_mul(mat4 m1, mat4 m2) {
     return res;
 }
 
-// create and returns the look_at matrix
+/*
+* @brief Creates and returns the look_at matrix.
+* 
+* @param pos The position of the camera.
+* @param target The position to look at.
+* @param up The up direction vector.
+* @return A mat4 struct containing the look_at matrix.
+*/
 static inline mat4 mat4_look_at(vec3 pos, vec3 target, vec3 up) {
     mat4 res;
     vec3 z_axis = vec3_normalized(vec3_sub(target, pos));
@@ -201,7 +454,12 @@ static inline mat4 mat4_look_at(vec3 pos, vec3 target, vec3 up) {
     return res;
 }
 
-// create and returns the transposed matrix of the given matrix
+/*
+* @brief Creates and returns the transposed matrix of the given matrix.
+* 
+* @param m The matrix to transpose.
+* @return A mat4 struct containing the transposed matrix.
+*/
 static inline mat4 mat4_transposed(mat4 m) {
     mat4 res;
     res.data[0]  = m.data[0];
@@ -223,7 +481,12 @@ static inline mat4 mat4_transposed(mat4 m) {
     return res;
 }
 
-// calculate and returns the determinant of the given matrix
+/*
+* @brief Calculates and returns the determinant of the given matrix.
+* 
+* @param m The matrix.
+* @return The determinant of m.
+*/
 static inline f32 mat4_determinant(mat4 m) {
     const f32* m_data = m.data;
     f32 t0  = m_data[10] * m_data[15];
@@ -255,7 +518,12 @@ static inline f32 mat4_determinant(mat4 m) {
     return determinant;
 }
 
-// calculate the inverse matrix
+/*
+* @brief Calculates the inverse matrix.
+* 
+* @param matrix The matrix to invert.
+* @return A mat4 struct containing the inverse of the matrix.
+*/
 static inline mat4 mat4_inverse(mat4 matrix) {
     const f32* m = matrix.data;
 
@@ -336,6 +604,15 @@ static inline mat4 mat4_inverse(mat4 matrix) {
     return out_matrix;
 }
 
+/*
+* @brief Creates and returns a perspective projection matrix.
+* 
+* @param fov The field of view angle in radians.
+* @param aspect_ratio The aspect ratio of the viewport.
+* @param near_clip The near clipping plane distance.
+* @param far_clip The far clipping plane distance.
+* @return A mat4 struct containing the perspective projection matrix.
+*/
 static inline mat4 mat4_perspective(f32 fov, f32 aspect_ratio, f32 near_clip, f32 far_clip) {
     f32 half_tan_fov = tan(fov * 0.5f);
     mat4 res;
