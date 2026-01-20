@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../common/defines.h"
+#include "common/defines.h"
 
 #define PI 3.14159265358979323846
 

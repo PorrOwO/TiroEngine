@@ -9,6 +9,9 @@
 #include "common/defines.h"
 #include "math/linalg.h"
 #include "math/math.h"
+//#include "camera/camera.h"
+#include "texture/texture.h"
+
 
 void processInput(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -16,10 +19,10 @@ void mouse_callback(GLFWwindow* window, f64 xpos, f64 ypos);
 void scroll_callback(GLFWwindow* window, f64 xoffset, f64 yoffset);
 
 float vertices[] = {
-    // positions         // colors
-    0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
-    0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top 
+    // positions         // colors          // texture
+     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f,// bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,// bottom left
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.5f, 1.0f,// top 
 };
 
 vec3 cameraPos   = (vec3){{0.0f, 0.0f,  3.0f}};
@@ -68,11 +71,17 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    // texture attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    // load texture
+    u32 texture_id = texture_generate("../src/content/textures/wall.jpg");
 
     while(!glfwWindowShouldClose(window)) {
         // per-frame time logic
@@ -87,10 +96,12 @@ int main()
         // ------
         glClearColor(0.7f, 0.1f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
+        
+        // bind texture
+        texture_bind(texture_id, 0);
+        
         // activate shader
         shader_use(shader_id);
-        
         // projection matrix
         mat4 projection =  mat4_perspective(radians(fov), (f32)WINDOW_WIDTH / (f32)WINDOW_HEIGHT, 0.1f, 100.0f);
         shader_set_mat4(shader_id, "projection", projection);

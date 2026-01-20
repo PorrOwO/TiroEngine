@@ -1,0 +1,25 @@
+* Tiro Engine
+** TODO LIST
+   - (-) math library
+   -- ( ) common functions wrappers
+   -- (-) linear algebra
+   --- (-) vec2
+   --- (-) vec3
+   --- (-) vec4
+   --- (-) mat4
+   - (x) camera component
+   -- (x) floating camera
+   - (x) texture component
+   -- (x) texture 2D loading
+   - ( ) mesh loading
+   -- ( ) simple .obj loader
+   - ( ) debug ui
+   -- ( ) microui integration
+   - ( ) logging system
+   - ( ) ECS
+
+** Learing resources 
+*** Books
+    - Game Engine Architecture by Jason Gregory
+*** Articles
+    - sensible ecs: https://blog.voxagon.se/2025/03/28/thoughts-on-ecs.html

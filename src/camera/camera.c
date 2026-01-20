@@ -2,7 +2,7 @@
 
 #include "camera/camera.h"
 #include "math/math.h"
-#include <math.h>
+#include "math/linalg.h"
 
 Camera camera_new(vec3 pos, vec3 up, f32 yaw, f32 pitch){
     Camera cam;

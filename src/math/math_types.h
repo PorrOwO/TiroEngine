@@ -1,5 +1,5 @@
 #pragma once
-#include "../common/defines.h"
+#include "common/defines.h"
 
 // 2 elements f32 vector, elements are accessable either as a 2-length array or as the fields of a struct.
 // You can access the fields either as v.x, v.y or as v.r, v.b (geometric x,y or r,g from rgb)
