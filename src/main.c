@@ -11,19 +11,13 @@
 #include "math/math.h"
 //#include "camera/camera.h"
 #include "texture/texture.h"
+#include "model/model.h"
 
 
 void processInput(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, f64 xpos, f64 ypos);
 void scroll_callback(GLFWwindow* window, f64 xoffset, f64 yoffset);
-
-float vertices[] = {
-    // positions         // colors          // texture
-     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f,// bottom right
-    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,// bottom left
-     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.5f, 1.0f,// top 
-};
 
 vec3 cameraPos   = (vec3){{0.0f, 0.0f,  3.0f}};
 vec3 cameraFront = (vec3){{0.0f, 0.0f, -1.0f}};
@@ -60,7 +54,20 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
+    // Enable depth testing
+    glEnable(GL_DEPTH_TEST);
+
     u32 shader_id = shader_new("../src/content/shaders/vertex.glsl", "../src/content/shaders/fragment.glsl");
+
+    // Load model from OBJ file
+    Model model = {0};
+    if (model_from_obj("../src/content/models/diablo3_pose.obj", &model) != IO_SUCCESS) {
+        printf("ERROR: Failed to load model\n");
+        glfwTerminate();
+        return -1;
+    }
+    printf("Loaded model with %zu vertices\n", model.verts.count);
+
     u32 VAO, VBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -68,20 +75,11 @@ int main()
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, model.verts.count * sizeof(f32), model.verts.items, GL_STATIC_DRAW);
 
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    // position attribute (only positions for now - 3 floats per vertex)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // texture attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    // load texture
-    u32 texture_id = texture_generate("../src/content/textures/wall.jpg");
 
     while(!glfwWindowShouldClose(window)) {
         // per-frame time logic
@@ -94,31 +92,32 @@ int main()
 
         // render
         // ------
-        glClearColor(0.7f, 0.1f, 0.5f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
-        // bind texture
-        texture_bind(texture_id, 0);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         // activate shader
         shader_use(shader_id);
         // projection matrix
-        mat4 projection =  mat4_perspective(radians(fov), (f32)WINDOW_WIDTH / (f32)WINDOW_HEIGHT, 0.1f, 100.0f);
+        mat4 projection = mat4_perspective(radians(fov), (f32)WINDOW_WIDTH / (f32)WINDOW_HEIGHT, 0.1f, 100.0f);
         shader_set_mat4(shader_id, "projection", projection);
         // camera view transforms
         mat4 view = mat4_look_at(cameraPos, vec3_sum(cameraPos, cameraFront), cameraUp);
         shader_set_mat4(shader_id, "view", view);
-        // model matrix (identity for now - no transformation on the triangle)
-        mat4 model = mat4_identity();
-        shader_set_mat4(shader_id, "model", model);
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
+        // model matrix
+        mat4 model_matrix = mat4_identity();
+        shader_set_mat4(shader_id, "model", model_matrix);
+        // draw the model
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(model.verts.count / 3));
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    // Cleanup
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    da_free(model.verts);
 
     glfwTerminate();
     return 0;

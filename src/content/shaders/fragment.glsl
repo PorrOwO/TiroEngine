@@ -1,13 +1,11 @@
 #version 460 core
 out vec4 FragColor;
 
-in vec3 ourColor;
-in vec2 TexCoord;
-
-uniform sampler2D ourTexture;
+in vec3 FragPos;
 
 void main()
 {
-    //FragColor = vec4(ourColor, 1.0f);
-    FragColor = texture(ourTexture, TexCoord) * vec4(ourColor, 1.0f);
+    // Simple shading based on position to give some visual depth
+    vec3 color = normalize(FragPos) * 0.5 + 0.5;
+    FragColor = vec4(color, 1.0f);
 }
