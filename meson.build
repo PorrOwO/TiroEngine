@@ -17,7 +17,8 @@ sources = files(
   'src/main.c',
   'src/shader/shader.c',
   'src/common/files.c',
-  'src/texture/texture.c'
+  'src/texture/texture.c',
+  'src/model/model.c'
 )
 
 # Create the executable
