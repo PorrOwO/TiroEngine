@@ -3,9 +3,9 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #include <GL/glext.h>
-#include "../common/defines.h"
-#include "../common/files.h"
-#include "../math/math_types.h"
+#include "common/defines.h"
+#include "common/files.h"
+#include "math/math_types.h"
 
 #define MAXSHADERBUFLEN 1000000
 

@@ -1,4 +1,4 @@
-#include "./shader.h"
+#include "shader/shader.h"
 #include <GL/glext.h>
 #include <string.h>
 

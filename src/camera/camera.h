@@ -3,8 +3,8 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 
-#include "../common/defines.h"
-#include "../math/math_types.h"
+#include "common/defines.h"
+#include "math/math_types.h"
 
 enum Camera_Movement{
     FORWARD  = 0,
